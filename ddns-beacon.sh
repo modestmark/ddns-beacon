@@ -1,5 +1,20 @@
 #!/bin/bash
 
+#if config file doesn't yet exist, call config script to create it
+if [ ! -a ./ddns-beacon-config ]
+  then
+    echo "No config file found!  Executing config script"
+    bash ./ddns-beacon-config.sh
+fi
+
+#check that config exists now; if not, exit
+
+if [ ! -a ./ddns-beacon-config ]
+  then
+    echo "Config file didn't get created, aborting!"
+    exit 1
+fi
+
 #if ip log file doesn't exist, create it
 if [ ! -a ./oldddnsip ]
   then
