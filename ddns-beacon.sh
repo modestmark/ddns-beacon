@@ -1,25 +1,31 @@
 #!/bin/bash
 
 #if config file doesn't yet exist, call config script to create it
-if [ ! -a ./ddns-beacon-config ]
-  then
-    echo "No config file found!  Executing config script"
-    bash ./ddns-beacon-config.sh
-fi
+#if [ ! -a ./ddns-beacon-config ]
+#  then
+#    echo "No config file found!  Executing config script"
+#    bash ./ddns-beacon-config.sh
+#fi
 
 #check that config exists now; if not, exit
 
-if [ ! -a ./ddns-beacon-config ]
-  then
-    echo "Config file didn't get created, aborting!"
-    exit 1
-fi
+#if [ ! -a ./ddns-beacon-config ]
+#  then
+#    echo "Config file didn't get created, aborting!"
+#    exit 1
+#fi
 
 #if ip log file doesn't exist, create it
 if [ ! -a ./oldddnsip ]
   then
     echo '0.0.0.0' > oldddnsip
 fi
+
+#read in variables from config file
+configData=`cat ./ddns-beacon-config`
+registrar=`echo $configData | awk '{print $1}'`
+apiKey=`echo $configData | awk '{print $2}'`
+recordID=`echo $configData | awk '{print $3}'`
 
 #find, format, and store wan ip
 ddnsip=`host myip.opendns.com resolver1.opendns.com | grep "has address" | awk '{print $4}'`
@@ -35,5 +41,8 @@ if [ $oldddnsip != $ddnsip ]
 fi
 echo $ddnsip
 
+#if update bit is set, update DNS record
+if [ $update == 1 ]
+  then
 
 
