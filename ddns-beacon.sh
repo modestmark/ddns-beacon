@@ -29,21 +29,19 @@ apiKey=`echo $configData | awk '{print $3}'`
 recordID=`echo $configData | awk '{print $4}'`
 
 #find, format, and store wan ip
-#ddnsip=`host myip.opendns.com resolver1.opendns.com | grep "has address" | awk '{print $4}'`
-ddnsip=8.8.8.8
+ddnsip=`host myip.opendns.com resolver1.opendns.com | grep "has address" | awk '{print $4}'`
 
-#construct URL strings for DNS record update via API
+#construct URL strings so we can update the DNS records via API
 if [ $registrar="DigitalOcean" ]
   then
-    recordURL="\"https://api.digitalocean.com/v2/domains/"
+    recordURL=https://api.digitalocean.com/v2/domains/
     recordURL=${recordURL}$domainName
     recordURL=${recordURL}/records/
-    recordURL=${recordURL}$recordID\"
-    echo $recordURL
+    recordURL=${recordURL}$recordID
 
-    payload="'{\"data\":\""
+    payload={\"data\":\"
     payload=${payload}$ddnsip
-    payload=${payload}\"\}\'
+    payload=${payload}\"\}
 fi
 
 #compare to ip from last run, set update bit if change has occurred
@@ -55,10 +53,6 @@ if [ $oldddnsip != $ddnsip ]
   else
     update=0
 fi
-
-#test stuff, delete when done
-echo $ddnsip
-echo curl -X PUT -H \"Content-Type: application/json\" -H \"Authorization: Bearer $apiKey\" -d $payload "$recordURL"
 
 #if update bit is set, update DNS record
 if [ $update == 1 ]
