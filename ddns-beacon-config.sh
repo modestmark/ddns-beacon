@@ -9,6 +9,8 @@ if [ $registrarChoice == 1 ]
     registrar="DigitalOcean"
 fi
 
+read -p 'What is the name of your domain? ' domainName
+
 echo "You'll need an API key from your registrar.  On DigitalOcean, 
       this is under Manage > API > Tokens/Keys > Personal access tokens."
 
@@ -20,12 +22,14 @@ read -p 'Enter your DNS record ID: ' recordID
 
 echo "Is this correct? y/n"
 echo "Registrar: " $registrar
+echo "Domain name: " $domainName
 echo "API key: " $apiKey
 echo "DNS record ID: " $recordID
 read confirm
 
 if [ $confirm != "y" ]
   then
+    echo "Fine then!  Aborting!"
     exit 1
 fi
 
@@ -37,6 +41,7 @@ if [ -a ./ddns-beacon-config ]
 fi
 
 echo $registrar >> ./ddns-beacon-config
+echo $domainName >> ./ddns-beacon-config
 echo $apiKey >> ./ddns-beacon-config
 echo $recordID >> ./ddns-beacon-config
 exit 1
