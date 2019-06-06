@@ -44,13 +44,13 @@ fi
 
 
 #rename old config file to .old if there is one, then write data to new config file
-if [ -a ./ddns-beacon-config ]
+if [ -f ${BASH_SOURCE%/*}/ddns-beacon-config ]
   then
-    mv ./ddns-beacon-config ./ddns-beacon-config.old
+    mv ${BASH_SOURCE%/*}/ddns-beacon-config ${BASH_SOURCE%/*}/ddns-beacon-config.old
 fi
 
-echo $registrar >> ./ddns-beacon-config
-echo $domainName >> ./ddns-beacon-config
-echo $apiKey >> ./ddns-beacon-config
-echo $recordID >> ./ddns-beacon-config
+echo $registrar >> ${BASH_SOURCE%/*}/ddns-beacon-config
+echo $domainName >> ${BASH_SOURCE%/*}/ddns-beacon-config
+echo $apiKey >> ${BASH_SOURCE%/*}/ddns-beacon-config
+echo $recordID >> ${BASH_SOURCE%/*}/ddns-beacon-config
 exit 1

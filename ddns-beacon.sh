@@ -1,28 +1,28 @@
 #!/bin/bash
 
 #if config file doesn't yet exist, call config script to create it
-if [ ! -f ./ddns-beacon-config ]
+if [ ! -f ${BASH_SOURCE%/*}/ddns-beacon-config ]
   then
     echo "No config file found!  Executing config script"
-    bash ./ddns-beacon-config.sh
+    bash ${BASH_SOURCE%/*}/ddns-beacon-config.sh
 fi
 
 #check that config exists now; if not, exit
 
-if [ ! -f ./ddns-beacon-config ]
+if [ ! -f ${BASH_SOURCE%/*}/ddns-beacon-config ]
   then
     echo "Config file didn't get created, aborting!"
     exit 1
 fi
 
 #if ip log file doesn't exist, create it
-if [ ! -f ./oldddnsip ]
+if [ ! -f ${BASH_SOURCE%/*}/oldddnsip ]
   then
-    echo '0.0.0.0' > oldddnsip
+    echo '0.0.0.0' > ${BASH_SOURCE%/*}/oldddnsip
 fi
 
 #read in variables from config file
-configData=`cat ./ddns-beacon-config`
+configData=`cat ${BASH_SOURCE%/*}/ddns-beacon-config`
 registrar=`echo $configData | awk '{print $1}'`
 domainName=`echo $configData | awk '{print $2}'`
 apiKey=`echo $configData | awk '{print $3}'`
@@ -45,11 +45,11 @@ if [ $registrar="DigitalOcean" ]
 fi
 
 #compare to ip from last run, set update bit if change has occurred
-oldddnsip=`cat ./oldddnsip`
+oldddnsip=`cat ${BASH_SOURCE%/*}/oldddnsip`
 if [ $oldddnsip != $ddnsip ]
   then
     update=1
-    echo $ddnsip > ./oldddnsip
+    echo $ddnsip > ${BASH_SOURCE%/*}/oldddnsip
     echo echo $(date '+%Y %b %d %H:%M') IP changed to $ddnsip!  Updating registrar
   else
     update=0
