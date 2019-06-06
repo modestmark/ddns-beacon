@@ -16,16 +16,25 @@ echo "You'll need an API key from your registrar.  On DigitalOcean,
 
 read -p 'Enter your API key: ' apiKey
 
-curl -X GET -H "Content-Type: application/json" -H "Authorization: Bearer 42787eb24ac2f8b7813408d936424f1ced0b7c93a4162fa1d433f20e1fea5372" "https://api.digitalocean.com/v2/domains/oldmanreffi.com/records" | jq .
+if [ $registrar="DigitalOcean" ]
+  then
+    recordURL=https://api.digitalocean.com/v2/domains/
+    recordURL=${recordURL}$domainName
+    recordURL=${recordURL}/records
+fi
 
-read -p 'Enter your DNS record ID: ' recordID
+curl -X GET -H "Content-Type: application/json" -H "Authorization: Bearer $apiKey" $recordURL
+printf "\n\n"
+echo "Find the DNS record you're using in that mess; you need its corresponding \"id\" field."
 
-echo "Is this correct? y/n"
+read -p 'Enter your DNS A record ID: ' recordID
+
+printf "\n\n"
 echo "Registrar: " $registrar
 echo "Domain name: " $domainName
 echo "API key: " $apiKey
 echo "DNS record ID: " $recordID
-read confirm
+read -p 'Is this correct? y/n: ' confirm
 
 if [ $confirm != "y" ]
   then
