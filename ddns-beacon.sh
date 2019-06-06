@@ -50,8 +50,10 @@ if [ $oldddnsip != $ddnsip ]
   then
     update=1
     echo $ddnsip > ./oldddnsip
+    echo echo $(date '+%Y %b %d %H:%M') IP changed to $ddnsip!  Updating registrar
   else
     update=0
+    echo $(date '+%Y %b %d %H:%M') Nothing to update!  Exiting
 fi
 
 #if update bit is set, update DNS record
